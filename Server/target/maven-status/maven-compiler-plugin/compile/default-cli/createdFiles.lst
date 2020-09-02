@@ -1,0 +1,13 @@
+server/Database.class
+server/CommandHandler.class
+server/RegistrationImpl.class
+server/Password.class
+server/Connection.class
+server/Dictionary.class
+server/Challenge.class
+server/Database$1.class
+server/Database$SingletonHelper.class
+module-info.class
+server/User.class
+server/TranslateService.class
+server/WordQuizzleServer.class
