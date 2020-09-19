@@ -1,8 +1,7 @@
 package org.baratta.logic;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 
@@ -17,9 +16,11 @@ public class ChallengeListener extends Task<ReadOnlyListProperty<Notification>> 
     private final ReadOnlyListProperty<Notification> notifications;
     private final DatagramSocket socket;
     private final byte[] buf = new byte[256];
+    private final SimpleBooleanProperty isChallenging;
 
     public ChallengeListener(DatagramSocket socket) {
         this.socket = socket;
+        isChallenging=new SimpleBooleanProperty(false);
         notificationsWrapper = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
         notifications = notificationsWrapper.getReadOnlyProperty();
     }
@@ -38,10 +39,16 @@ public class ChallengeListener extends Task<ReadOnlyListProperty<Notification>> 
                 System.out.println(received);
 
                 StringTokenizer tokenizer = new StringTokenizer(received);
-                if (tokenizer.nextToken().startsWith("CHALLENGE")) {
+                String token=tokenizer.nextToken();
+                if (token.startsWith("CHALLENGE")) {
                     DatagramPacket finalPacket = packet;
                     Platform.runLater(() -> {
                         notificationsWrapper.add(new Notification(tokenizer.nextToken().trim(), "CHALLENGE", finalPacket.getAddress(), finalPacket.getPort()));
+                    });
+                }else
+                if (token.startsWith("STARTED")){
+                    Platform.runLater(() -> {
+                        isChallenging.setValue(true);
                     });
                 }
             } catch (IOException e) {
@@ -54,6 +61,9 @@ public class ChallengeListener extends Task<ReadOnlyListProperty<Notification>> 
         return notifications;
     }
 
+    public SimpleBooleanProperty isChallengingProperty() {
+        return isChallenging;
+    }
 
     public ReadOnlyListProperty<Notification> getNotifications() {
         return notifications;

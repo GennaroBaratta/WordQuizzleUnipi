@@ -18,10 +18,12 @@ import java.rmi.registry.Registry;
  */
 public class WordQuizzleClient {
     private static Integer UDPport = 33333;
-    public static int TCP_PORT = 2919;
+    public static final int TCP_PORT = 2919;
     public SocketChannel socket;
     public Registration registration;
-    ByteBuffer length, reply, msg;
+    final ByteBuffer length;
+    final ByteBuffer reply;
+    ByteBuffer msg;
     public DatagramSocket challengeSocket = null;
 
     public WordQuizzleClient() {
@@ -47,6 +49,7 @@ public class WordQuizzleClient {
                 UDPport++;
             }
         } while (challengeSocket == null);
+
         InetSocketAddress address = new InetSocketAddress("localhost", TCP_PORT);
         try {
             socket = SocketChannel.open(address);
@@ -109,16 +112,8 @@ public class WordQuizzleClient {
         return write("ADD_FRIEND " + username + " " + friendname);
     }
 
-    public String lista_amici(String username) {
-        return write("FRIEND_LIST " + username);
-    }
-
     public String sfida(String username, String friendname) {
         return write("CHALLENGE " + username + " " + friendname);
-    }
-
-    public String mostra_punteggio(String username) {
-        return write("SCORE " + username);
     }
 
     public String mostra_classifica(String username) {
@@ -133,45 +128,4 @@ public class WordQuizzleClient {
         }
         return write(sb.toString());
     }
-
-    public static void main(String[] args) throws IOException {
-        WordQuizzleClient WQClient = new WordQuizzleClient();
-
-        // System.out.println(WQClient.register("Geb2", "aaa"));
-        System.out.println(WQClient.login("Gennaro", "lol260892"));
-        System.out.println(WQClient.login("Gebbaro", "lol260892"));
-        System.out.println(WQClient.sfida("Gebbaro", "Gennaro"));
-
-
-        /*
-        System.out.println(WQClient.mostra_punteggio("Geb2"));
-
-        System.out.println(WQClient.aggiungi_amico("Geb2", "Stef"));
-        System.out.println(WQClient.aggiungi_amico("Geb2", "Gb1"));
-        System.out.println(WQClient.sfida("Geb2", "Gb1"));
-
-        System.out.println(WQClient.mostra_classifica("Geb2"));
-         * // System.out.println(WQClient.register("Stef", "bbb"));
-         * System.out.println(WQClient.login("Stef", "bbb"));
-         * System.out.println(WQClient.mostra_punteggio("Stef"));
-         * System.out.println(WQClient.logout("Stef"));
-         * 
-         * // System.out.println(WQClient.register("Gb1", "ccc"));
-         * System.out.println(WQClient.login("Gb1", "ccc"));
-         * System.out.println(WQClient.mostra_punteggio("Gb1"));
-         * System.out.println(WQClient.logout("Gb1")); /*
-         * System.out.println("Response: " + WQClient.login("Gebbaro2", "aaaa"));
-         * System.out.println("Response: " + WQClient.logout("Gebbaro2"));
-         * System.out.println("Response: " + WQClient.login("Gebbaro2", "aaaa"));
-         * System.out.println("Response: " + WQClient.logout("Gebbaro2"));
-         * System.out.println("Response: " + WQClient.login("Gebbaro2", "aaaa"));
-         * System.out.println("Response: " + WQClient.logout("Gebbaro2"));
-         * System.out.println("Response: " + WQClient.login("Gebbaro2", "aaaa"));
-         * System.out.println("Response: " + WQClient.logout("Gebbaro2"));
-         * System.out.println("Response: " + WQClient.login("Gebbaro2", "aaaa"));
-         * System.out.println("Response: " + WQClient.aggiungi_amico("Gebbaro2",
-         * "aaa"));
-         */
-    }
-
 }

@@ -3,10 +3,6 @@ package org.baratta;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -51,7 +47,6 @@ public class DashboardController {
     @FXML
     private Button wordButton;
 
-    SimpleBooleanProperty isChallenging;
     private String username;
 
     //private  ChallengeListener listener;
@@ -77,14 +72,14 @@ public class DashboardController {
 
 
         startTask(challengeListener);
-        wordButton.setOnAction(new EventHandler<ActionEvent>() {
+        wordButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 handleSendWord();
             }
         });
         usernameLabel.setText(username);
-        logoutButton.setOnAction(new EventHandler<ActionEvent>() {
+        logoutButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
@@ -104,7 +99,7 @@ public class DashboardController {
         LinkedHashMap<String, Integer> friendList;
         List<HBox> friendsLabels = new ArrayList<>();
         try {
-            friendList = mapper.readValue(replay, new TypeReference<LinkedHashMap<String, Integer>>() {
+            friendList = mapper.readValue(replay, new TypeReference<>() {
             });
             for (String friend : friendList.keySet()) {
                 HBox rankEntry = new HBox(8);
@@ -114,18 +109,18 @@ public class DashboardController {
                 Label score = new Label(friendList.get(friend).toString());
                 if (!friend.equals(username)) {
                     Button challenge = new Button("Sfida");
-                    challenge.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    challenge.setOnMouseClicked(new EventHandler<>() {
                         @Override
                         public void handle(MouseEvent mouseEvent) {
                             ChallengeSender challengeSender = new ChallengeSender(username, friend);
                             challengeSender.messageProperty().addListener((observableValue, s, t1) -> {
-                                if(t1!=null){
-                                    if(t1.startsWith("OK")){
+                                if (t1 != null) {
+                                    if (t1.startsWith("OK")) {
                                         showWord(null);
                                         responseLabel.setText("Sfida accettata");
-                                    }else if (t1.startsWith("KO")){
+                                    } else if (t1.startsWith("KO")) {
                                         responseLabel.setText("Sfida non accetta");
-                                    }else {
+                                    } else {
                                         responseLabel.setText(t1);
                                     }
                                 }
@@ -146,7 +141,6 @@ public class DashboardController {
     }
 
     private void showWord(String response) {
-        System.out.println("Show word");
         if (response == null) {
             wordButton.setVisible(true);
             word.setVisible(true);

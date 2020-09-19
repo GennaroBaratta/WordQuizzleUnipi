@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TranslateService {
     private static final String HOST = "api.mymemory.translated.net";
@@ -18,8 +19,7 @@ public class TranslateService {
     public ArrayList<String> translate(String word) {
         String query = PATH + word + "&langpair=it|en";
         ArrayList<String> traduzioni = new ArrayList<>();
-        return traduzioni;
-        /*
+
         try {
             URL url = new URL("https", HOST, query);
             URLConnection uc = url.openConnection();
@@ -40,8 +40,8 @@ public class TranslateService {
                 JsonNode jsonNode = objectMapper.readTree(response.toString());
 
                 for (JsonNode node : jsonNode.path("matches")) {
-                  //  if(node.path("quality").asInt() == 74)
-                        traduzioni.add(node.path("translation").asText().trim().toLowerCase());
+                    //  if(node.path("quality").asInt() == 74)
+                    traduzioni.add(node.path("translation").asText().trim().toLowerCase());
                 }
             } else {
                 traduzioni.add("GET request not worked");
@@ -50,11 +50,17 @@ public class TranslateService {
             e.printStackTrace();
             traduzioni.add("IOError");
         }
-        return traduzioni;*/
+        return traduzioni;
     }
 
     public static void main(String[] args) {
         TranslateService ts = new TranslateService();
-        System.out.println(ts.translate("ciao"));
+        Dictionary dic = new Dictionary();
+        List<String> words = dic.getWordsToTranslate(10);
+        System.out.println(words);
+        List<ArrayList<String>> translated = new ArrayList<>();
+        for (String word : words)
+            translated.add(ts.translate(word));
+        System.out.println(translated);
     }
 }

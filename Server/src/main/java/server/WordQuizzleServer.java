@@ -24,23 +24,23 @@ import java.util.concurrent.TimeUnit;
  * server.WordQuizzleServer
  */
 public class WordQuizzleServer {
-    public static int TCP_PORT = 2919;
+    public static final int TCP_PORT = 2919;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         int corePoolSize = 1;
         int maximumPoolSize = 4;
         long keepAliveTime = 5;
         BlockingQueue<Runnable> workQ = new LinkedBlockingQueue<>(20);
         ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime,
                 TimeUnit.SECONDS, workQ);
-        try {
+        Registry r;
+
             RegistrationImpl registration = new RegistrationImpl();
             LocateRegistry.createRegistry(9999);
-            Registry r = LocateRegistry.getRegistry(9999);
+            r = LocateRegistry.getRegistry(9999);
+            //r.unbind(Registration.SERVICE_NAME);
             r.rebind(Registration.SERVICE_NAME, registration);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+
         ServerSocketChannel serverChannel;
         Selector selector;
         try {
@@ -118,7 +118,7 @@ public class WordQuizzleServer {
                 } catch (Exception e) {
                     String usr = Database.getInstance().getOnlineUser(key);
                     if(usr != null){
-                        //Database.getInstance().logout(usr);
+                        Database.getInstance().logout(usr);
                         e.printStackTrace();
                     }
                     key.cancel();
@@ -129,9 +129,6 @@ public class WordQuizzleServer {
                     }
                 }
             }
-
         }
-
     }
-
 }

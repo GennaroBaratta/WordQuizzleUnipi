@@ -4,7 +4,5 @@
 <?import javafx.scene.layout.VBox?>
 
 <fx:root type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Label text="Notifiche" />
-   </children>
+    <Label text="Notifiche"/>
 </fx:root>

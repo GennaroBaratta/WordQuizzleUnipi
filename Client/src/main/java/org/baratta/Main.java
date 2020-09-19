@@ -1,9 +1,6 @@
 package org.baratta;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -12,7 +9,7 @@ import org.baratta.logic.WordQuizzleClient;
 public class Main extends Application {
     Router router;
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         Scene scene = new Scene(new StackPane());
         router = new Router(scene);
         router.showLogin();

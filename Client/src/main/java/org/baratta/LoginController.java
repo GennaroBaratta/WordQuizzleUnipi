@@ -33,7 +33,7 @@ public class LoginController {
     private Label feedback;
 
     public void initLogin(Router router) {
-        loginButton.setOnAction(new EventHandler<ActionEvent>() {
+        loginButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 String username = null;
@@ -47,7 +47,7 @@ public class LoginController {
                 }
             }
         });
-        registrationLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        registrationLabel.setOnMouseClicked(new EventHandler<>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 router.showRegistration();

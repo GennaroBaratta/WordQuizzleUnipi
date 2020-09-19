@@ -1,7 +1,6 @@
 package org.baratta;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
@@ -24,9 +23,9 @@ public class Router {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("Dashboard.fxml")
             );
-            scene.setRoot((Parent) loader.load());
+            scene.setRoot(loader.load());
             DashboardController ctrl =
-                    loader.<DashboardController>getController();
+                    loader.getController();
             ctrl.initDashboard(this, username);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -42,9 +41,9 @@ public class Router {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("Login.fxml")
             );
-            scene.setRoot((Parent) loader.load());
+            scene.setRoot(loader.load());
             LoginController ctrl =
-                    loader.<LoginController>getController();
+                    loader.getController();
             ctrl.initLogin(this);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -56,9 +55,9 @@ public class Router {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("Registration.fxml")
             );
-            scene.setRoot((Parent) loader.load());
+            scene.setRoot(loader.load());
             RegistrationController ctrl =
-                    loader.<RegistrationController>getController();
+                    loader.getController();
             ctrl.initRegistration(this);
         } catch (IOException ex) {
             ex.printStackTrace();

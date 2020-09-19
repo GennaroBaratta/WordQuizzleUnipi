@@ -23,7 +23,7 @@ public class RegistrationImpl extends UnicastRemoteObject implements Registratio
     public String register(String name, String password) throws RemoteException {
         Database database = Database.getInstance();
         if (password.isBlank()) {
-            return "server.Password non valida";
+            return "Password non valida";
         }
         if (!database.isRegistered(name)) {// un verifica approssimativa(no lock) per evitare computazione inutile per
             // l'hashing della password

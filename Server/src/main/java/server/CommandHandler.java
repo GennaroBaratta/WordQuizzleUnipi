@@ -15,7 +15,6 @@ class CommandHandler implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Dentro handler");
         System.out.println(request);
         StringTokenizer tokenizer = new StringTokenizer(request);
 

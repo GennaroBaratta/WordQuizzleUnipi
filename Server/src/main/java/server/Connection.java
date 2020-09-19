@@ -3,7 +3,7 @@ package server;
 import java.nio.channels.SelectionKey;
 
 public class Connection {
-    private SelectionKey key;
+    private final SelectionKey key;
     private final Integer UDPport;
 
     public Connection(SelectionKey key, Integer UDPport) {

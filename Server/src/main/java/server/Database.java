@@ -12,6 +12,7 @@ import java.net.SocketTimeoutException;
 import java.nio.channels.SelectionKey;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -19,10 +20,13 @@ import java.util.stream.Collectors;
  */
 final public class Database {
     //numero parole per sfida
-    int K=4;
+    final int K=4;
+    //porta per UDP 49152–65535
+    private final AtomicInteger UDPport = new AtomicInteger(49152);
     private ConcurrentHashMap<String, User> users = null;
     private final ConcurrentHashMap<String, Connection> onlineUsers = new ConcurrentHashMap<>();
     private ObjectMapper objectMapper = null;
+    private final Dictionary dictionary = new Dictionary();
 
     private void merge() throws IOException {
         PrintWriter pw;
@@ -256,7 +260,7 @@ final public class Database {
                 return "Sfida in corso";
             }
             if (key.equals(key2) && user.getFriends().contains(friendname)) {
-                int port = 40000;
+                int port = UDPport.getAndAdd(1);
                 String name = "LocalHost";
                 byte[] buffer = new byte[100];
                 DatagramPacket receivedPacket = new DatagramPacket(buffer, buffer.length);
@@ -268,22 +272,25 @@ final public class Database {
                             friendConnection.getUDPport());
                     server.send(toSend);
                     server.receive(receivedPacket);
+                    UDPport.decrementAndGet();
                     byte[] destBuf = new byte[receivedPacket.getLength()];
                     System.arraycopy(receivedPacket.getData(), receivedPacket.getOffset(), destBuf, 0, destBuf.length);
                     String replay = new String(destBuf);
                     if (replay.startsWith("OK")) {
-                        user.getChallenge().start(users.get(friendname),Dictionary.getWordsToTranslate(K));
-                        users.get(friendname).getChallenge().start(user,Dictionary.getWordsToTranslate(K));
+                        String x="STARTED";
+                        toSend.setData(x.getBytes());
+                        server.send(toSend);
+                        List<String> words = dictionary.getWordsToTranslate(K);
+                        user.getChallenge().start(users.get(friendname),words);
+                        users.get(friendname).getChallenge().start(user,words);
                     }
                     return replay;
                 } catch (SocketTimeoutException e) {
                     return "Sfida non accettata";
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                     return e.getMessage();
-                }// TODO Auto-generated catch block
-
+                }
             }
             return "Non autorizzato";
         }
@@ -298,10 +305,10 @@ final public class Database {
             if (word != null) {
                 if (challenge.addWord(word) == 0) {
                     user.addScore(10);
-                    isRight = "Risposta esatta, prossima parola: ";
+                    isRight = "Risposta esatta, ";
                 } else {
                     user.addScore(-5);
-                    isRight = "Risposta sbagliata, prossima parola: ";
+                    isRight = "Risposta sbagliata, ";
                 }
             }
             String response = user.getChallenge().nextWordToTranslate();
@@ -311,7 +318,7 @@ final public class Database {
                 }
                 challenge.stop();
                 update(user);
-                return response;
+                return response+isRight;
             }
             return isRight + response;
         }

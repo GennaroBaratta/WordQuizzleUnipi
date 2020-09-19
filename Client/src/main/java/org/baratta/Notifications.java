@@ -1,6 +1,5 @@
 package org.baratta;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
@@ -42,6 +41,7 @@ public class Notifications extends VBox {
     }
 
     private void bindToWorker(ChallengeListener worker) {
+        worker.isChallengingProperty().bindBidirectional(isChallenging);
         worker.getNotifications().addListener((ListChangeListener<? super Notification>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
@@ -49,13 +49,14 @@ public class Notifications extends VBox {
                     for (Notification notification : notifications) {
                         Label message = new Label(notification.toString());
                         Button accept = new Button("Accept");
+                        accept.disableProperty().bind(isChallenging);
                         Button decline = new Button("Decline");
                         HBox notificationBox = new HBox(message, accept, decline);
                         decline.setOnAction(new DeclineHandler(worker,notification.getAddress(),notification.getPort(),() -> {
                             getChildren().remove(notificationBox);
                             return null;
                         }));
-                        accept.setOnAction(new AcceptHandler(worker, notification.getAddress(), notification.getPort(), isChallenging, () -> {
+                        accept.setOnAction(new AcceptHandler(worker, notification.getAddress(), notification.getPort(), () -> {
                             getChildren().remove(notificationBox);
                             return null;
                         }));
@@ -71,22 +72,20 @@ public class Notifications extends VBox {
     }
 
     private static class AcceptHandler implements EventHandler<ActionEvent> {
-        private final SimpleBooleanProperty isChallenging;
         private final Callable<Void> removeNotification;
 
-        ChallengeResponse senderOk;
+        final ChallengeResponse challengeResponse;
 
-        public AcceptHandler(ChallengeListener worker, InetAddress address, int port, SimpleBooleanProperty isChallenging, Callable<Void> o) {
-            this.isChallenging=isChallenging;
+        public AcceptHandler(ChallengeListener worker, InetAddress address, int port, Callable<Void> o) {
             this.removeNotification = o;
-            this.senderOk = new ChallengeResponse(worker.getSocket(), address, port,"OK");
+            this.challengeResponse = new ChallengeResponse(worker.getSocket(), address, port,"OK");
         }
 
 
         @Override
         public void handle(ActionEvent actionEvent) {
             startTask();
-            isChallenging.setValue(true);
+            //isChallenging.setValue(true);
             try {
                 removeNotification.call();
             } catch (Exception e) {
@@ -96,7 +95,7 @@ public class Notifications extends VBox {
         }
 
         private void startTask() {
-            Thread backgroundThread = new Thread(senderOk);
+            Thread backgroundThread = new Thread(challengeResponse);
             backgroundThread.setDaemon(true);
             backgroundThread.start();
         }
@@ -104,7 +103,7 @@ public class Notifications extends VBox {
 
     private static class DeclineHandler implements EventHandler<ActionEvent> {
         private final Callable<Void> removeNotification;
-        ChallengeResponse senderKO;
+        final ChallengeResponse senderKO;
 
         public DeclineHandler(ChallengeListener worker, InetAddress address, int port, Callable<Void> o) {
 

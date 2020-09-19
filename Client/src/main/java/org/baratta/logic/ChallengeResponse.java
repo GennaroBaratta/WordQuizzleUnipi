@@ -9,9 +9,9 @@ import java.net.InetAddress;
 
 public class ChallengeResponse extends Task<Void> {
     private final DatagramSocket socket;
-    InetAddress address;
-    int port;
-    String response;
+    final InetAddress address;
+    final int port;
+    final String response;
 
     public ChallengeResponse(DatagramSocket socket,InetAddress address,int port,String response){
         this.socket=socket;
@@ -28,8 +28,7 @@ public class ChallengeResponse extends Task<Void> {
 
     public void sendOk(InetAddress address, int port) {
         byte[] ackbuf;
-        String s = response;
-        ackbuf = s.getBytes();
+        ackbuf = response.getBytes();
         DatagramPacket ack = new DatagramPacket(ackbuf, ackbuf.length, address, port);
         try {
             socket.send(ack);

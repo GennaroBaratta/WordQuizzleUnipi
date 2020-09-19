@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * server.Challenge
@@ -16,9 +17,10 @@ public class Challenge {
     private final TranslateService ts;
     private Date start = null;
     private int guessed=0;
-    private boolean started=false;
+    private final AtomicBoolean started;
 
     public Challenge() {
+        started=new AtomicBoolean(false);
         this.ts = new TranslateService();
         position = 0;
         wordsToTranslate=new LinkedList<>();
@@ -59,11 +61,11 @@ public class Challenge {
     }
 
     private void setStarted(boolean started) {
-        this.started = started;
+        this.started.set(started);
     }
 
     public boolean isStarted(){
-        return started;
+        return started.get();
     }
 
     private void setFriend(User friend) {
@@ -78,24 +80,20 @@ public class Challenge {
     }
 
     public void start(User friend, List<String> words) {
+        setStarted(true);
+        start = null;
         position=0;
         guessed=0;
         wordsTranslated.clear();
         wordsToTranslate.clear();
         wordsToTranslate.addAll(words);
         translateWords();
-        setStarted(true);
         setFriend(friend);
     }
 
     public void stop() {
         setStarted(false);
-        start = null;
     }
 
-    public static void main(String[] args) {
-        Challenge challenge = new Challenge();
-        challenge.wordsToTranslate.clear();
-        challenge.wordsToTranslate.addAll(Dictionary.getWordsToTranslate(4));
-    }
+
 }

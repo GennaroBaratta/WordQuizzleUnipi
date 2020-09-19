@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
  * Registration
  */
 public interface Registration extends Remote {
-    public final String SERVICE_NAME = "WorldQuizzleRegistration";
+    String SERVICE_NAME = "WorldQuizzleRegistration";
 
-    public String register(String name, String password) throws RemoteException;
+    String register(String name, String password) throws RemoteException;
 }

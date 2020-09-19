@@ -65,7 +65,7 @@ public class RegistrationController {
     }
 
     public void initRegistration(Router router) {
-        registerButton.setOnAction(new EventHandler<ActionEvent>() {
+        registerButton.setOnAction(new EventHandler<>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
@@ -76,7 +76,7 @@ public class RegistrationController {
             }
         });
 
-        backLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        backLabel.setOnMouseClicked(new EventHandler<>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 router.showLogin();

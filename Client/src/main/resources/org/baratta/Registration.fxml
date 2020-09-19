@@ -22,21 +22,19 @@
         <Image url="@splash.jpg"/>
     </ImageView>
     <AnchorPane focusTraversable="true" layoutX="288.0" layoutY="209.0" prefHeight="266.0" prefWidth="200.0">
-        <children>
-            <Button fx:id="registerButton" layoutX="25.0" layoutY="226.0" mnemonicParsing="false" prefHeight="18.0"
-                    prefWidth="150.0" styleClass="loginBtn" stylesheets="@style.css" text="Register"/>
-            <Label layoutX="26.0" layoutY="26.0" text="Username"/>
-            <Label layoutX="26.0" layoutY="91.0" text="Password"/>
-            <Label fx:id="retypeLabel" layoutX="25.0" layoutY="151.0" text="Retype Password"/>
-            <TextField fx:id="username" layoutX="26.0" layoutY="44.0"/>
-            <PasswordField fx:id="password" layoutX="26.0" layoutY="109.0"/>
-            <PasswordField fx:id="retype" layoutX="26.0" layoutY="169.0" onKeyTyped="#validate_password"/>
-            <Label fx:id="feedback" alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="200.0"
-                   text="Label" visible="false"/>
-        </children>
         <cursor>
             <Cursor fx:constant="DEFAULT"/>
         </cursor>
+        <Button fx:id="registerButton" layoutX="25.0" layoutY="226.0" mnemonicParsing="false" prefHeight="18.0"
+                prefWidth="150.0" styleClass="loginBtn" stylesheets="@style.css" text="Register"/>
+        <Label layoutX="26.0" layoutY="26.0" text="Username"/>
+        <Label layoutX="26.0" layoutY="91.0" text="Password"/>
+        <Label fx:id="retypeLabel" layoutX="25.0" layoutY="151.0" text="Retype Password"/>
+        <TextField fx:id="username" layoutX="26.0" layoutY="44.0"/>
+        <PasswordField fx:id="password" layoutX="26.0" layoutY="109.0"/>
+        <PasswordField fx:id="retype" layoutX="26.0" layoutY="169.0" onKeyTyped="#validate_password"/>
+        <Label fx:id="feedback" alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="200.0"
+               text="Label" visible="false"/>
     </AnchorPane>
     <Label fx:id="backLabel" layoutX="14.0" layoutY="14.0" styleClass="labelLink" stylesheets="@style.css" text="Back"/>
 </Pane>
